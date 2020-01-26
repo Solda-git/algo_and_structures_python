@@ -18,7 +18,7 @@ def bubble_sort(arr):
         for j in range(i + 1, len(arr)):
             if arr[i] > arr[j]:
                 arr[i], arr[j] = arr[j], arr[i]
-                changes += 1
+                changes = 1
             j += 1
         if changes == 0:
 
