@@ -109,6 +109,4 @@ print('____________________________________________________')
 print('Function getreversenumber4:\n')
 getreversenumber4(TESTNUMBER)
 print('____________________________________________________')
-
 print(sys.getrefcount(TESTNUMBER))
-
