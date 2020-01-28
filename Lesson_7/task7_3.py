@@ -54,7 +54,7 @@ def sort_find_median(arr):
             if arr[j+1] < arr[j]:
                 arr[j+1], arr[j] = arr[j], arr[j+1]
             else:
-                continue
+                break
     return arr[len(arr)//2]
 
 while 1:
