@@ -34,7 +34,9 @@ class Tree:
         self.elems.extend(left_node.elems)
         self.elems.extend(right_node.elems)
         self.elems[0].left = self.elems[1]
+        self.elems[1].parent = self.elems[0]
         self.elems[0].right = self.elems[len(left_node.elems)+1]
+        self.elems[len(left_node.elems) + 1].parent = self.elems[0]
 
         self.elems[0].weight = left_node.elems[0].weight + right_node.elems[0].weight
         return self
@@ -46,6 +48,7 @@ class Haffman:
     def __init__(self, input_string):
         self.message_text = input_string
         self.freq_table = Counter(input_string)
+        self.code_dict = {}
         #serv_deque = deque(sorted(self.freq_table.items(), key = lambda i: i[1]))
         #print(serv_deque)
 
@@ -71,8 +74,27 @@ class Haffman:
         right_tree = tdeque.popleft()
         self.haffman_tree.build_branch(left_tree, right_tree)
 
-    def build_code_tab(self):
-        pass
+    def build_code_tab(self, node = None, code_str=""):
+
+        """ for i, item in enumerate(self.haffman_tree.elems):
+            if item.value is not None:
+                reverse_code=''
+                while item.parent is not None:
+                    if item.parent.left == item:
+                        reverse_code += '0'
+                    else:
+                        reverse_code += '1'
+                self.code_dict[item.value] = reverse_code.reverse()
+        """
+        #if first call without 'node' parameter
+        if node is None:
+            node = self.haffman_tree.elems[0]
+        if node.value is not None:
+            self.code_dict[node.value] = code_str
+        else:
+            self.build_code_tab(node.left, code_str + "0")
+            self.build_code_tab(node.right, code_str + "1")
+        return self.code_dict
 
     def encript_message(self):
         pass
@@ -83,10 +105,20 @@ class Haffman:
 
 test = Haffman('beep boop beer!')
 test.build_tree()
+print(test.build_code_tab())
+
+
+## formed tree testing
+
+
+print(str(test.haffman_tree.elems[0].left.left.value))
+print("!!! ", str(test.haffman_tree.elems[0].left.right.right.value), " !!!")
+
+print(str(test.haffman_tree.elems[0].right.right.value))
+print(str(test.haffman_tree.elems[0].right.left.left.right.value))
 
 #print(test.freq_table)
-
-
+"""
 tr1 =  Tree(TreeElement())
 tr2 =  Tree(TreeElement('r', 1))
 tr3 =  Tree(TreeElement('!', 1))
@@ -109,3 +141,4 @@ print(tr5.elems[0].left.right.value)
 #print(freq_table)
 #print(f"Первый символ: {tlist[0].elems[0].value}, частота: {tlist[0].elems[0].weight}.")
 #print(f"Последний символ: {tlist[len(tlist)-1].elems[0].value}, частота: {tlist[len(tlist)-1].elems[0].weight}.")
+"""
