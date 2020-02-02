@@ -1,20 +1,16 @@
 """
 1. Закодируйте любую строку из трех слов по алгоритму Хаффмана.
 """
-from collections import Counter
+from collections import Counter, deque
 
 class TreeElement:
-    def __init__(self, node_value=None, node_weight=None ):
+    def __init__(self, node_value=None, node_weight=0):
         self.value = node_value
         self.weight = node_weight
         self.parent = None
         self.left = None
         self.right = None
         #self.index = 0
-
-
-
-
 
 class Tree:
 
@@ -28,6 +24,9 @@ class Tree:
             result = result + f"Item {i}: wiegth = {item.weight}, value = {item.value} \n"
         return result
 
+    #def __mod__(self):
+    #    return self[0].weight
+
     def build_branch(self, left_node, right_node):
         if len(self.elems) > 1:
             print('Operation is valir for singe node tree only')
@@ -36,10 +35,9 @@ class Tree:
         self.elems.extend(right_node.elems)
         self.elems[0].left = self.elems[1]
         self.elems[0].right = self.elems[len(left_node.elems)+1]
+
         self.elems[0].weight = left_node.elems[0].weight + right_node.elems[0].weight
         return self
-
-
 
 class Haffman:
     """
@@ -48,12 +46,30 @@ class Haffman:
     def __init__(self, input_string):
         self.message_text = input_string
         self.freq_table = Counter(input_string)
-    def calc_symbols(self):
-        pass
-
+        #serv_deque = deque(sorted(self.freq_table.items(), key = lambda i: i[1]))
+        #print(serv_deque)
 
     def build_tree(self):
-        pass
+        # forming of ascending sorted deque of Trees with single node (root)
+        # from the symbols frequency table saved in Counter(freq_table)
+        tdeque = deque(sorted([Tree(TreeElement(i[0], self.freq_table[i[0]])) for i in self.freq_table], key=lambda x: x.elems[0].weight))
+        while len(tdeque) > 2:
+            print(f"len(tdeque): {len(tdeque)}")
+            left_tree = tdeque.popleft()
+            print(left_tree)
+            right_tree = tdeque.popleft()
+            new_tree = Tree(TreeElement())
+            new_tree.build_branch(left_tree, right_tree)
+            for i in range(0, len(tdeque)):
+                if  new_tree.elems[0].weight <= tdeque[i].elems[0].weight:
+                    tdeque.insert(i, new_tree)
+                    break
+                if i == len(tdeque)-1:
+                    tdeque.append(new_tree)
+        self.haffman_tree = Tree(TreeElement())
+        left_tree = tdeque.popleft()
+        right_tree = tdeque.popleft()
+        self.haffman_tree.build_branch(left_tree, right_tree)
 
     def build_code_tab(self):
         pass
@@ -66,22 +82,30 @@ class Haffman:
 
 
 test = Haffman('beep boop beer!')
-print(test.freq_table)
+test.build_tree()
 
-te1 = TreeElement()
-te2 = TreeElement('r', 1)
-te3= TreeElement('!', 1)
-te4= TreeElement('p', 2)
-te5 = TreeElement()
+#print(test.freq_table)
 
-tr1 =  Tree(te1)
-tr2 =  Tree(te2)
-tr3 =  Tree(te3)
-tr4 =  Tree(te4)
-tr5 =  Tree(te5)
+
+tr1 =  Tree(TreeElement())
+tr2 =  Tree(TreeElement('r', 1))
+tr3 =  Tree(TreeElement('!', 1))
+tr4 =  Tree(TreeElement('p', 2))
+tr5 =  Tree(TreeElement())
 
 tr1.build_branch(tr2,tr3)
 tr5.build_branch(tr1,tr4)
 
 print(tr5)
 print(tr5.elems[0].left.right.value)
+#freq_table = Counter("beep boop beer!")
+#list = [freq_table[i[0]] for i in freq_table ]
+#tlist = deque([Tree(TreeElement(i[0],freq_table[i[0]])) for i in freq_table ])
+
+#tlist = deque(sorted([Tree(TreeElement(i[0],freq_table[i[0]])) for i in freq_table], key=lambda x: x.elems[0].weight))
+
+#sorted("beep boop beer!")
+
+#print(freq_table)
+#print(f"Первый символ: {tlist[0].elems[0].value}, частота: {tlist[0].elems[0].weight}.")
+#print(f"Последний символ: {tlist[len(tlist)-1].elems[0].value}, частота: {tlist[len(tlist)-1].elems[0].weight}.")
