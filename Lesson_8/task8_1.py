@@ -29,9 +29,6 @@ class Tree:
             result = result + f"Item {i}: wiegth = {item.weight}, value = {item.value} \n"
         return result
 
-    #def __mod__(self):
-    #    return self[0].weight
-
     def build_branch(self, left_node, right_node):
         """
         function builds up tree structure using self.node as root,
@@ -49,7 +46,6 @@ class Tree:
         self.elems[1].parent = self.elems[0]
         self.elems[0].right = self.elems[len(left_node.elems)+1]
         self.elems[len(left_node.elems) + 1].parent = self.elems[0]
-
         self.elems[0].weight = left_node.elems[0].weight + right_node.elems[0].weight
         return self
 
@@ -62,8 +58,6 @@ class Haffman:
         self.freq_table = Counter(input_string)
         self.code_dict = {}
         self.haffman_tree = Tree(TreeElement())
-        #serv_deque = deque(sorted(self.freq_table.items(), key = lambda i: i[1]))
-        #print(serv_deque)
 
     def build_tree(self):
         """
@@ -75,9 +69,7 @@ class Haffman:
         tdeque = deque(sorted([Tree(TreeElement(i[0],\
         self.freq_table[i[0]])) for i in self.freq_table], key=lambda x: x.elems[0].weight))
         while len(tdeque) > 2:
-            #print(f"len(tdeque): {len(tdeque)}")
             left_tree = tdeque.popleft()
-            #print(left_tree)
             right_tree = tdeque.popleft()
             new_tree = Tree(TreeElement())
             new_tree.build_branch(left_tree, right_tree)
@@ -87,7 +79,6 @@ class Haffman:
                     break
                 if i == len(tdeque)-1:
                     tdeque.append(new_tree)
-        #self.haffman_tree = Tree(TreeElement())
         left_tree = tdeque.popleft()
         right_tree = tdeque.popleft()
         self.haffman_tree.build_branch(left_tree, right_tree)
@@ -100,7 +91,7 @@ class Haffman:
         :return: dictionary of  Haffman code table
         """
 
-        #if first call without 'node' parameter
+        #if first call is without 'node' parameter
         if node is None:
             node = self.haffman_tree.elems[0]
         if node.value is not None:
@@ -115,7 +106,7 @@ class Haffman:
         function returns encrypted message
         :return:
         """
-        return ''.join([self.code_dict[i] for i in self.message_text]) #result
+        return ''.join([self.code_dict[i] for i in self.message_text])
 
 MY_HAFFMAN = Haffman('beep boop beer!')
 MY_HAFFMAN.build_tree()
