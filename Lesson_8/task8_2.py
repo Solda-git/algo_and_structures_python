@@ -22,3 +22,4 @@ while i < len(INPUT_STRING):
 print(SUBSTRINGS)
 print(UNIQUE)
 print(f"Number of different substrings are {len(UNIQUE_HASH)}:\n{UNIQUE_HASH}.")
+
